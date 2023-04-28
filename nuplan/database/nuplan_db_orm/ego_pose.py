@@ -28,7 +28,7 @@ class EgoPose(Base):
     """
     Ego vehicle pose at a particular timestamp. Given with respect to global coordinate system.
     """
-
+    __allow_unmapped__ = True
     __tablename__ = "ego_pose"
 
     token = Column(sql_types.HexLen8, primary_key=True)  # type: str

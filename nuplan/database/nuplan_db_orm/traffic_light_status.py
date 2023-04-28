@@ -20,7 +20,7 @@ class TrafficLightStatus(Base):
     """
     Traffic Light Statuses in a Log.
     """
-
+    __allow_unmapped__ = True
     __tablename__ = 'traffic_light_status'
 
     token: str = Column(sql_types.HexLen8, primary_key=True)

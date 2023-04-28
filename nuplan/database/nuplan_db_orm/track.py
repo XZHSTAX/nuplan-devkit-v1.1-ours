@@ -22,7 +22,7 @@ class Track(Base):
     """
     Track from tracker output. A track represents a bunch of lidar boxes with the same instance id in a given log.
     """
-
+    __allow_unmapped__ = True
     __tablename__ = "track"
 
     token: str = Column(sql_types.HexLen8, primary_key=True)

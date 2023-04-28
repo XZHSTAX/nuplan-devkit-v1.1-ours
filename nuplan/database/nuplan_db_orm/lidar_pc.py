@@ -36,7 +36,7 @@ class LidarPc(Base):
     """
     A lidar point cloud.
     """
-
+    __allow_unmapped__ = True
     __tablename__ = "lidar_pc"
 
     token = Column(sql_types.HexLen8, primary_key=True)  # type: str

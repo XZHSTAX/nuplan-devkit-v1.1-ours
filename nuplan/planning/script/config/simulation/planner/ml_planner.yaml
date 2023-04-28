@@ -2,6 +2,6 @@ ml_planner:
   _target_: nuplan.planning.simulation.planner.ml_planner.ml_planner.MLPlanner
   _convert_: 'all'
 
-  model_config: ???  # Dictionary key from existing planner model config (e.g. raster_model)
-  checkpoint_path: ???  # Path to trained model checkpoint
+  model_config: ${model}  # Dictionary key from existing planner model config (e.g. raster_model)
+  checkpoint_path: "/home/user001/Code/nuplan-devkit/nuplan/exp/exp/training/vector_model/2023.04.28.17.08.21/best_model/epoch=6-step139.ckpt"  # Path to trained model checkpoint
   thread_safe: true

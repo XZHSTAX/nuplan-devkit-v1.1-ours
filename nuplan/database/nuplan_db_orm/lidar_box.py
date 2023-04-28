@@ -44,7 +44,7 @@ class LidarBox(Base):
     """
     Lidar box from tracker.
     """
-
+    __allow_unmapped__ = True
     __tablename__ = "lidar_box"
 
     token: str = Column(sql_types.HexLen8, primary_key=True)

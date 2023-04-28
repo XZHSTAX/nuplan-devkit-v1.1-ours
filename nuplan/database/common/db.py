@@ -115,7 +115,7 @@ class SessionManager:
         if t not in self._session_pool[pid]:
             # Turn on autocommit and autoflush so that the DB transaction history gets flushed to disk.
             # Otherwise, the transaction history will be saved only in memory, leading to unbounded memory growth.
-            self._session_pool[pid][t] = Session(bind=self.engine, autocommit=True, autoflush=True)
+            self._session_pool[pid][t] = Session(bind=self.engine, autocommit=False, autoflush=True)
 
         return self._session_pool[pid][t]
 

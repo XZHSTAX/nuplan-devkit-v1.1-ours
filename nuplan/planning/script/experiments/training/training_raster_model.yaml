@@ -6,8 +6,8 @@ objective_aggregate_mode: mean
 defaults:
   - override /data_augmentation:
   - override /objective:
-      - imitation_objective
-  - override /splitter: nuplan
+      - imitation_objective # 使用 回车和- 建立的值，将会指向一个文件，并且这个文件里的是键+值的对应，即{"objective":{"imitation_objective":value}}
+  - override /splitter: nuplan # 直接使用后接的形式，会指向一个文件，但这个文件中的内容将直接称为前面描述的值。即{"splitter":nuplan} 
   - override /model: raster_model
   - override /scenario_filter: training_scenarios
   - override /training_metric:

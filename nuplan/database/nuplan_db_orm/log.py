@@ -25,7 +25,7 @@ class Log(Base):
     """
     Information about the log from which the data was extracted.
     """
-
+    __allow_unmapped__ = True
     __tablename__ = "log"
 
     token = Column(sql_types.HexLen8, primary_key=True)  # type: str

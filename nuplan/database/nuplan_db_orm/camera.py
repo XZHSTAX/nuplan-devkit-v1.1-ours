@@ -18,7 +18,7 @@ class Camera(Base):
     """
     Defines a calibrated camera used to record a particular log.
     """
-
+    __allow_unmapped__ = True
     __tablename__ = "camera"
 
     token = Column(sql_types.HexLen8, primary_key=True)  # type: str

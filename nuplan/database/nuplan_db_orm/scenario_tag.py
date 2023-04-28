@@ -20,7 +20,7 @@ class ScenarioTag(Base):
     """
     Scenarios Tags for a scene.
     """
-
+    __allow_unmapped__ = True
     __tablename__ = 'scenario_tag'
 
     token: str = Column(sql_types.HexLen8, primary_key=True)

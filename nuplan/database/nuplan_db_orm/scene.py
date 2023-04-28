@@ -20,7 +20,7 @@ class Scene(Base):
     """
     Scenes in a Log.
     """
-
+    __allow_unmapped__ = True
     __tablename__ = 'scene'
 
     token: str = Column(sql_types.HexLen8, primary_key=True)

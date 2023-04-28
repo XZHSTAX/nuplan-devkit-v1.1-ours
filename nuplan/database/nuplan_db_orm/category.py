@@ -20,7 +20,7 @@ class Category(Base):
     A category within our taxonomy. Includes both things (e.g. cars) or stuff (e.g. lanes, sidewalks).
     Subcategories are delineated by a period.
     """
-
+    __allow_unmapped__ = True
     __tablename__ = "category"
 
     token = Column(sql_types.HexLen8, primary_key=True)  # type: str

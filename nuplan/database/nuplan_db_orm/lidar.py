@@ -23,7 +23,7 @@ class Lidar(Base):
     """
     Defines a calibrated lidar used to record a particular log.
     """
-
+    __allow_unmapped__ = True
     __tablename__ = "lidar"
 
     token = Column(sql_types.HexLen8, primary_key=True)  # type: str

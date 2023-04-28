@@ -34,7 +34,7 @@ class Image(Base):
     """
     An image.
     """
-
+    __allow_unmapped__ = True
     __tablename__ = "image"
 
     token = Column(sql_types.HexLen8, primary_key=True)  # type: str
