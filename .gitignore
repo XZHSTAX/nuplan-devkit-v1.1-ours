@@ -33,3 +33,4 @@ _ext
 docs/_build/
 docs/generated/
 nuplan/dataset
+nuplan/exp
