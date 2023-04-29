@@ -1,0 +1,19 @@
+# @package _global_
+job_name: our_model
+py_func: train
+objective_aggregate_mode: mean
+
+defaults:
+  - override /data_augmentation:
+      - kinematic_agent_augmentation
+      - agent_dropout_augmentation
+  - override /objective:
+      - our_objective
+  - override /splitter: nuplan
+  - override /model: our_model
+  - override /scenario_filter: training_scenarios
+  - override /training_metric:
+      - avg_displacement_error
+      - avg_heading_error
+      - final_displacement_error
+      - final_heading_error
