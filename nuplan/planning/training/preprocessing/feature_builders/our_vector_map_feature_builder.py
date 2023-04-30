@@ -96,7 +96,7 @@ def _generate_multi_scale_connections(connections: torch.Tensor, scales: List[in
     return _accumulate_connections(node_idx_to_neighbor_dict, scales)
 
 
-class VectorMapFeatureBuilder(ScriptableFeatureBuilder):
+class OurVectorMapFeatureBuilder(ScriptableFeatureBuilder):
     """
     Feature builder for constructing map features in a vector-representation.
     """

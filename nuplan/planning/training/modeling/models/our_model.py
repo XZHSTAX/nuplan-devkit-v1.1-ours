@@ -13,17 +13,17 @@ from nuplan.planning.training.modeling.models.lanegcn_utils import (
 )
 from nuplan.planning.training.modeling.torch_module_wrapper import TorchModuleWrapper
 from nuplan.planning.training.modeling.types import FeaturesType, TargetsType
-from nuplan.planning.training.preprocessing.feature_builders.agents_feature_builder import AgentsFeatureBuilder
+from nuplan.planning.training.preprocessing.feature_builders.our_agent_feature_builder import OurAgentsFeatureBuilder
 from nuplan.planning.training.preprocessing.feature_builders.vector_builder_utils import (
     LaneOnRouteStatusData,
     LaneSegmentTrafficLightData,
 )
-from nuplan.planning.training.preprocessing.feature_builders.vector_map_feature_builder import VectorMapFeatureBuilder
+from nuplan.planning.training.preprocessing.feature_builders.our_vector_map_feature_builder import OurVectorMapFeatureBuilder
 from nuplan.planning.training.preprocessing.features.agents import Agents
 from nuplan.planning.training.preprocessing.features.trajectory import Trajectory
 from nuplan.planning.training.preprocessing.features.vector_map import VectorMap
-from nuplan.planning.training.preprocessing.target_builders.ego_trajectory_target_builder import (
-    EgoTrajectoryTargetBuilder,
+from nuplan.planning.training.preprocessing.target_builders.our_ego_trajectory_target_builder import (
+    OurEgoTrajectoryTargetBuilder,
 )
 
 
@@ -75,13 +75,13 @@ class OurModel(TorchModuleWrapper):
         """
         super().__init__(
             feature_builders=[
-                VectorMapFeatureBuilder(
+                OurVectorMapFeatureBuilder(
                     radius=vector_map_feature_radius,
                     connection_scales=vector_map_connection_scales,
                 ),
-                AgentsFeatureBuilder(trajectory_sampling=past_trajectory_sampling),
+                OurAgentsFeatureBuilder(trajectory_sampling=past_trajectory_sampling),
             ],
-            target_builders=[EgoTrajectoryTargetBuilder(future_trajectory_sampling=future_trajectory_sampling)],
+            target_builders=[OurEgoTrajectoryTargetBuilder(future_trajectory_sampling=future_trajectory_sampling)],
             future_trajectory_sampling=future_trajectory_sampling,
         )
 

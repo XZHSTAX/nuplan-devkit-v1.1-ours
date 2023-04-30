@@ -35,11 +35,12 @@ def build_lightning_datamodule(
     :return: Instantiated datamodule object.
     """
     # Build features and targets
+    # only include Classtype, just run class __init__ to initilize
     feature_builders = model.get_list_of_required_feature()
     target_builders = model.get_list_of_computed_target()
 
     # Build splitter
-    splitter = build_splitter(cfg.splitter)
+    splitter = build_splitter(cfg.splitter) # log filiter
 
     # Create feature preprocessor
     feature_preprocessor = FeaturePreprocessor(
@@ -53,7 +54,7 @@ def build_lightning_datamodule(
     augmentors = build_agent_augmentor(cfg.data_augmentation) if 'data_augmentation' in cfg else None
 
     # Build dataset scenarios
-    scenarios = build_scenarios(cfg, worker, model)
+    scenarios = build_scenarios(cfg, worker, model) # from dataset extract and filiter scenarios 
 
     # Create datamodule
     datamodule: pl.LightningDataModule = DataModule(

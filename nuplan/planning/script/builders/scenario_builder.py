@@ -146,9 +146,9 @@ def extract_scenarios_from_dataset(cfg: DictConfig, worker: WorkerPool) -> List[
     :param worker: Worker to submit tasks which can be executed in parallel.
     :return: List of extracted scenarios.
     """
-    scenario_builder = build_scenario_builder(cfg)
-    scenario_filter = build_scenario_filter(cfg.scenario_filter)
-    scenarios: List[AbstractScenario] = scenario_builder.get_scenarios(scenario_filter, worker)
+    scenario_builder = build_scenario_builder(cfg) # get log file 
+    scenario_filter = build_scenario_filter(cfg.scenario_filter) # filter log file
+    scenarios: List[AbstractScenario] = scenario_builder.get_scenarios(scenario_filter, worker) # get scenario type and its info 
 
     return scenarios
 
