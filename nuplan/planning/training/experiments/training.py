@@ -40,7 +40,7 @@ def build_training_engine(cfg: DictConfig, worker: WorkerPool) -> TrainingEngine
     """
     logger.info('Building training engine...')
 
-    # Create model
+    # Create model, run __init__  and super.__init__, and create class instance
     torch_module_wrapper = build_torch_module_wrapper(cfg.model)
 
     # Build the datamodule

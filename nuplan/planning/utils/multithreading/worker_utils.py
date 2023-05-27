@@ -29,8 +29,8 @@ def worker_map(worker: WorkerPool, fn: Callable[..., List[Any]], input_objects: 
     if worker.number_of_threads == 0:
         return fn(input_objects)
 
-    object_chunks = chunk_list(input_objects, worker.number_of_threads)
+    object_chunks = chunk_list(input_objects, worker.number_of_threads) # put data into every cpu node(core) averagely
     scattered_objects = worker.map(Task(fn=fn), object_chunks)
-    output_objects = [result for results in scattered_objects for result in results]
+    output_objects = [result for results in scattered_objects for result in results] # two for loop to get element dict of list in list 
 
     return output_objects

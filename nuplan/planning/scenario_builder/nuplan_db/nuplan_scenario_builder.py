@@ -121,9 +121,9 @@ class NuPlanScenarioBuilder(AbstractScenarioBuilder):
         :param worker: Worker pool for concurrent scenario processing.
         :return: Constructed scenario dictionary.
         """
-        allowable_log_names = set(scenario_filter.log_names) if scenario_filter.log_names is not None else None
+        allowable_log_names = set(scenario_filter.log_names) if scenario_filter.log_names is not None else None # filter by log name
         map_parameters = [
-            GetScenariosFromDbFileParams(
+            GetScenariosFromDbFileParams( # class that only store data
                 data_root=self._data_root,
                 log_file_absolute_path=log_file,
                 expand_scenarios=scenario_filter.expand_scenarios,
@@ -208,7 +208,7 @@ class NuPlanScenarioBuilder(AbstractScenarioBuilder):
                 enable=(scenario_filter.ego_stop_speed_threshold is not None),
                 name='filter_ego_stops',
             ),
-        ]
+        ] # a list with every element is a partial function，fix filter type with scenarios as parameter
 
         return filters
 

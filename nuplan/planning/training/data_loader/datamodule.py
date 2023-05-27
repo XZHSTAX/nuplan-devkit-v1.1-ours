@@ -27,7 +27,7 @@ def create_dataset(
     samples: List[AbstractScenario],
     feature_preprocessor: FeaturePreprocessor,
     dataset_fraction: float,
-    dataset_name: str,
+    dataset_name: str,# 只是为了log信息
     augmentors: Optional[List[AbstractAugmentor]] = None,
 ) -> torch.utils.data.Dataset:
     """

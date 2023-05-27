@@ -16,7 +16,8 @@ from nuplan.planning.training.experiments.cache_metadata_entry import (
 )
 from nuplan.planning.training.modeling.torch_module_wrapper import TorchModuleWrapper
 from nuplan.planning.utils.multithreading.worker_utils import WorkerPool, worker_map
-
+import os
+import csv
 logger = logging.getLogger(__name__)
 
 
@@ -70,18 +71,33 @@ def get_local_scenario_cache(cache_path: str, feature_names: Set[str]) -> List[P
     :param feature_names: Set of required feature names to check when loading scenario paths from the cache.
     :return: List of discovered cached scenario paths.
     """
-    cache_dir = Path(cache_path)
-    assert cache_dir.exists(), f'Local cache {cache_dir} does not exist!'
-    assert any(cache_dir.iterdir()), f'No files found in the local cache {cache_dir}!'
+    metadata_path = os.path.join(cache_path,'metadata/cache_metadata_node_0.csv')
+    if os.path.exists(metadata_path):
+        logger.info(f'[{metadata_path}]exit,Use metadata to load cache-----XZH')
+        with open(metadata_path) as csvfile:
+            reader = csv.DictReader(csvfile)
+            column = [row['file_name'] for row in reader]   # file_name 同列的数据
+        # scenario_cache_paths = [
+        #     Path(path)
+        #     for path in column
+        #     if not (feature_names - {feature_name.stem for feature_name in path.iterdir()})
+        # ]
+        scenario_cache_paths = [Path(i).parent for i in column]            
+    else:
+        logger.info(f'[{metadata_path}]does not exit,Use origin way to load cache-----XZH')
 
-    candidate_scenario_dirs = [path for log_dir in cache_dir.iterdir() for path in log_dir.iterdir()]
+        cache_dir = Path(cache_path)
+        assert cache_dir.exists(), f'Local cache {cache_dir} does not exist!'
+        assert any(cache_dir.iterdir()), f'No files found in the local cache {cache_dir}!'
 
-    # Keep only dir paths that contains all required feature names
-    scenario_cache_paths = [
-        path
-        for path in candidate_scenario_dirs
-        if not (feature_names - {feature_name.stem for feature_name in path.iterdir()})
-    ]
+        candidate_scenario_dirs = [path for log_dir in cache_dir.iterdir() for path in log_dir.iterdir()]
+
+        # Keep only dir paths that contains all required feature names
+        scenario_cache_paths = [
+            path
+            for path in candidate_scenario_dirs
+            if not (feature_names - {feature_name.stem for feature_name in path.iterdir()})
+        ]
 
     return scenario_cache_paths
 
@@ -146,8 +162,8 @@ def extract_scenarios_from_dataset(cfg: DictConfig, worker: WorkerPool) -> List[
     :param worker: Worker to submit tasks which can be executed in parallel.
     :return: List of extracted scenarios.
     """
-    scenario_builder = build_scenario_builder(cfg) # get log file 
-    scenario_filter = build_scenario_filter(cfg.scenario_filter) # filter log file
+    scenario_builder = build_scenario_builder(cfg) # creat classtype and initiate scenario parameter like db file, scenario mapping, vehicle parameters etc 
+    scenario_filter = build_scenario_filter(cfg.scenario_filter) # creat classtype and initiate filter parameter like limit_total_scenarios, speed_noise_tolerance etc
     scenarios: List[AbstractScenario] = scenario_builder.get_scenarios(scenario_filter, worker) # get scenario type and its info 
 
     return scenarios

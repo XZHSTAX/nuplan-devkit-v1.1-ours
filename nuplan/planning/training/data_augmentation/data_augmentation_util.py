@@ -133,7 +133,7 @@ class ConstrainedNonlinearSmoother:
           dx/dt = f(x,u)
           \dot{x} = speed * cos(yaw)
           \dot{y} = speed * sin(yaw)
-          \dot{yaw} = speed * curvature
+          \dot{yaw} = speed * curvatureaccel
           \dot{speed} = accel
         """
         state = self.state

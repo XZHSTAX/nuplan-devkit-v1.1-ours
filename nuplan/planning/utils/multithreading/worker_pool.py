@@ -29,7 +29,7 @@ def align_size_of_arguments(*item_lists: Iterable[List[Any]]) -> Tuple[int, Iter
     :param item_lists: multiple arguments which will be used to call a function.
     :return: arguments with same dimension, e.g., [[db, db], [arg1, arg1]].
     """
-    max_size = get_max_size_of_arguments(*item_lists)
+    max_size = get_max_size_of_arguments(*item_lists) # *param act as tuple, can receive mutiple param
     aligned_item_lists = [items if isinstance(items, list) else [items] * max_size for items in item_lists]
     return max_size, aligned_item_lists
 
