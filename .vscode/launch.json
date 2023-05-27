@@ -1,0 +1,105 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Training-raster",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/nuplan/planning/script/run_training.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["py_func=train" ,
+                    "+training=training_raster_model" ,
+                    "scenario_builder=nuplan_mini" ,
+                    "scenario_filter.limit_total_scenarios=500" ,
+                    "lightning.trainer.params.max_epochs=10" ,
+                    "data_loader.params.batch_size=8" ,
+                    "data_loader.params.num_workers=4"]
+        },
+        {
+            "name": "Training-vectory",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/nuplan/planning/script/run_training.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": ["py_func=train" ,
+                    "+training=training_vector_model" ,
+                    "scenario_builder=nuplan_mini" ,
+                    "scenario_filter.limit_total_scenarios=200" ,
+                    "lightning.trainer.params.max_epochs=1" ,
+                    "data_loader.params.batch_size=2",
+                    "data_loader.params.num_workers=4",
+                    "worker=sequential" ]
+        },
+        {
+            "name": "Training-vectory-big",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/nuplan/planning/script/run_training.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["py_func=train" ,
+                    "+training=training_vector_model" ,
+                    "scenario_builder=nuplan" ,
+                    "data_loader.params.batch_size=8" ,
+                    "lr_scheduler=one_cycle_lr",
+                    "scenario_filter.limit_total_scenarios=800000" ,
+                    "lightning.trainer.params.max_epochs=500" ,
+                    "data_loader.params.num_workers=4",
+                    "worker=sequential"]
+        },
+        {
+            "name": "Training-ourmodel",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/nuplan/planning/script/run_training.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["py_func=train" ,
+                    "+training=training_our_model" ,
+                    "scenario_builder=nuplan_mini" ,
+                    "scenario_filter.limit_total_scenarios=500" ,
+                    "lightning.trainer.params.max_epochs=1" ,
+                    "data_loader.params.batch_size=8" ,
+                    "data_loader.params.num_workers=6"]
+        },
+        {
+            "name": "Simulation-vectory",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/nuplan/planning/script/run_simulation.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["+simulation=open_loop_boxes" ,
+            "+checkpoint_path='/home/user001/Code/nuplan-devkit-v1.1-ours/nuplan/exp/exp/training/vector_model/2023.04.28.21.31.45/best_model/epoch=9-step=199.ckpt'",
+            "planner=ml_planner" ,
+            "model=vector_model",
+            "scenario_builder=nuplan_mini" ,
+            "scenario_filter=all_scenarios" ,
+            "scenario_filter.scenario_types=[near_multiple_vehicles, on_pickup_dropoff, starting_unprotected_cross_turn, high_magnitude_jerk]" ,
+            "scenario_filter.num_scenarios_per_type=10" ]
+        },
+        {
+            "name": "Visualize-nuboard",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/nuplan/planning/script/run_nuboard.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["scenario_builder=nuplan_mini" ,
+            "simulation_path='/home/user001/Code/nuplan-devkit-v1.1-ours/nuplan/exp/exp/simulation/open_loop_boxes/2023.04.28.21.45.32'" ]
+        }
+    ]
+}
