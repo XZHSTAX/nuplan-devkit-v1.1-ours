@@ -130,11 +130,11 @@ class VectorMapFeatureBuilder(ScriptableFeatureBuilder):
             ego_state = scenario.initial_ego_state
             ego_coords = Point2D(ego_state.rear_axle.x, ego_state.rear_axle.y)
             (
-                lane_seg_coords,
-                lane_seg_conns,
-                lane_seg_groupings,
-                lane_seg_lane_ids,
-                lane_seg_roadblock_ids,
+                lane_seg_coords, # 车道线的坐标？       [num_lane_segment, 2, 2]为什么是2，2
+                lane_seg_conns,  # 车道线的连接情况     [num_connection, 2]
+                lane_seg_groupings,#对车道线坐标的分组  [num_lane, num_lane_segment_in_lane]
+                lane_seg_lane_ids, #对车道线分组后的编号(类似于上面的one hot 形式) [num_lane_segment 1]
+                lane_seg_roadblock_ids,#不知道是什么 [num_lane_segment 1]
             ) = get_neighbor_vector_map(scenario.map_api, ego_coords, self._radius) # return tuple and distribute every value to every variable
 
             # compute route following status

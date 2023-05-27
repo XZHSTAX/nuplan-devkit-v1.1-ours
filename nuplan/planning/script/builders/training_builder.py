@@ -35,14 +35,14 @@ def build_lightning_datamodule(
     :return: Instantiated datamodule object.
     """
     # Build features and targets
-    # only include Classtype, just run class __init__ to initilize
+    # get Classtype, which get from torchmodel initialization(build_torch_module_wrapper)
     feature_builders = model.get_list_of_required_feature()
     target_builders = model.get_list_of_computed_target()
 
     # Build splitter
-    splitter = build_splitter(cfg.splitter) # log filiter
+    splitter = build_splitter(cfg.splitter) # spliter train/val/test set
 
-    # Create feature preprocessor
+    # Create feature preprocessor class, its method compute or load feature from builders or cache
     feature_preprocessor = FeaturePreprocessor(
         cache_path=cfg.cache.cache_path,
         force_feature_computation=cfg.cache.force_feature_computation,
@@ -50,7 +50,7 @@ def build_lightning_datamodule(
         target_builders=target_builders,
     )
 
-    # Create data augmentation
+    # Create data augmentation, perturbs ego state, and generates trajectory satisfying consatrints
     augmentors = build_agent_augmentor(cfg.data_augmentation) if 'data_augmentation' in cfg else None
 
     # Build dataset scenarios
@@ -85,16 +85,28 @@ def build_lightning_module(cfg: DictConfig, torch_module_wrapper: TorchModuleWra
     metrics = build_training_metrics(cfg)
 
     # Create the complete Module
-    model = LightningModuleWrapper(
-        model=torch_module_wrapper,
-        objectives=objectives,
-        metrics=metrics,
-        batch_size=cfg.data_loader.params.batch_size,
-        optimizer=cfg.optimizer,
-        lr_scheduler=cfg.lr_scheduler if 'lr_scheduler' in cfg else None,
-        warm_up_lr_scheduler=cfg.warm_up_lr_scheduler if 'warm_up_lr_scheduler' in cfg else None,
-        objective_aggregate_mode=cfg.objective_aggregate_mode,
-    )
+    if "training_checkpoint" not in cfg:
+        model = LightningModuleWrapper(
+            model=torch_module_wrapper,
+            objectives=objectives,
+            metrics=metrics,
+            batch_size=cfg.data_loader.params.batch_size,
+            optimizer=cfg.optimizer,
+            lr_scheduler=cfg.lr_scheduler if 'lr_scheduler' in cfg else None,
+            warm_up_lr_scheduler=cfg.warm_up_lr_scheduler if 'warm_up_lr_scheduler' in cfg else None,
+            objective_aggregate_mode=cfg.objective_aggregate_mode,
+        )
+    else:
+        model = LightningModuleWrapper.load_from_checkpoint(
+            checkpoint_path=cfg.training_checkpoint,
+            model=torch_module_wrapper,
+            objectives=objectives,
+            metrics=metrics,
+            batch_size=cfg.data_loader.params.batch_size,
+            optimizer=cfg.optimizer,
+            lr_scheduler=cfg.lr_scheduler if 'lr_scheduler' in cfg else None,
+            warm_up_lr_scheduler=cfg.warm_up_lr_scheduler if 'warm_up_lr_scheduler' in cfg else None,
+            objective_aggregate_mode=cfg.objective_aggregate_mode,)
 
     return cast(pl.LightningModule, model)
 
@@ -107,11 +119,11 @@ def build_trainer(cfg: DictConfig) -> pl.Trainer:
     """
     params = cfg.lightning.trainer.params
 
-    callbacks = build_callbacks(cfg)
+    callbacks = build_callbacks(cfg) # call funtion when trigger event like on epoch start
 
     plugins = [
         pl.plugins.DDPPlugin(find_unused_parameters=False, num_nodes=params.num_nodes),
-    ]
+    ] # TODO in distributed training check whether plugins is right
 
     loggers = [
         pl.loggers.TensorBoardLogger(
@@ -132,7 +144,7 @@ def build_trainer(cfg: DictConfig) -> pl.Trainer:
         return pl.Trainer(plugins=plugins, **params)
 
     if cfg.lightning.trainer.checkpoint.resume_training:
-        # Resume training from latest checkpoint
+        # Resume training from latest checkpoint,only for that training epoch is not finished
         output_dir = Path(cfg.output_dir)
         date_format = cfg.date_format
 

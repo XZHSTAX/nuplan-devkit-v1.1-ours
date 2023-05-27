@@ -46,13 +46,13 @@ class ScenarioDataset(torch.utils.data.Dataset):
         scenario = self._scenarios[idx]
 
         features, targets, _ = self._feature_preprocessor.compute_features(scenario)
-
+        # 数据增强
         if self._augmentors is not None:
             for augmentor in self._augmentors:
                 augmentor.validate(features, targets)
                 features, targets = augmentor.augment(features, targets, scenario)
 
-        features = {key: value.to_feature_tensor() for key, value in features.items()}
+        features = {key: value.to_feature_tensor() for key, value in features.items()} # 把字典内容转为张量
         targets = {key: value.to_feature_tensor() for key, value in targets.items()}
         scenarios = [scenario]
 
