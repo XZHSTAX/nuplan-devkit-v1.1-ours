@@ -65,4 +65,12 @@ ENV NUPLAN_MAPS_ROOT=/data/sets/nuplan/maps \
     NUPLAN_HOME=/nuplan_devkit
 
 RUN bash -c 'mkdir -p {$NUPLAN_MAPS_ROOT,$NUPLAN_DATA_ROOT,$NUPLAN_EXP_ROOT}'
+<<<<<<< HEAD
+RUN apt-get update \
+    && apt-get install -y \
+    awscli \
+    && rm -rf /var/lib/apt/lists/*
+# CMD ["/nuplan_devkit/nuplan/entrypoint_submission.sh"]
+=======
 CMD ["/nuplan_devkit/nuplan/entrypoint_submission.sh"]
+>>>>>>> 639384e0f5b23cc5b5ba39326f4f97578d4f4f80
