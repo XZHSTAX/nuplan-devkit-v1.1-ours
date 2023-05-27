@@ -2,13 +2,13 @@ version: "3.7"
 
 x-nuplan-volumes: &x-nuplan-volumes
   volumes:
-    - "$NUPLAN_DATA_ROOT:/data/sets/nuplan:rw"
-    - "$NUPLAN_EXP_ROOT:/data/exp/nuplan:rw"
+    - "/home/user001/Code/nuplan-devkit-v1.1-ours/nuplan/dataset/:/data/sets/nuplan:rw"
+    - "/home/user001/Code/nuplan-devkit-v1.1-ours/nuplan/exp:/data/exp/nuplan:rw"
 
 
 x-nuplan-maps: &x-nuplan-maps
   volumes:
-    - "$NUPLAN_MAPS_ROOT:/data/sets/nuplan/maps:rw"
+    - "/home/user001/Code/nuplan-devkit-v1.1-ours/nuplan/dataset/maps:/data/sets/nuplan/maps:rw"
 
 
 services:

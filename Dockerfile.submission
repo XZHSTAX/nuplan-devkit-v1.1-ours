@@ -1,11 +1,12 @@
-FROM ubuntu:20.04
+FROM nvidia/cuda:11.0.3-runtime-ubuntu20.04
 
 RUN apt-get update \
     && apt-get install -y curl gnupg2 software-properties-common default-jdk
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 
-RUN curl -fsSL https://bazel.build/bazel-release.pub.gpg | apt-key add - \
+COPY bazel-release.pub.gpg .
+RUN apt-key add bazel-release.pub.gpg \
     && curl -fsSL https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add - \
     && curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu20.04/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list \
     && add-apt-repository "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" \
@@ -20,17 +21,30 @@ RUN curl -fsSL https://bazel.build/bazel-release.pub.gpg | apt-key add - \
 
 # Download miniconda and install silently.
 ENV PATH /opt/conda/bin:$PATH
-RUN curl -fsSLo Miniconda3-latest-Linux-x86_64.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
-    rm Miniconda3-latest-Linux-x86_64.sh && \
-    conda clean -a -y
+# RUN curl -fsSLo Miniconda3-latest-Linux-x86_64.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+#     bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
+#     rm Miniconda3-latest-Linux-x86_64.sh && \
+#     conda clean -a -y
+
+RUN curl -fsSLo Miniconda3-latest-Linux-x86_64.sh https://mirrors.bfsu.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda \
+    && rm Miniconda3-latest-Linux-x86_64.sh  \
+    && conda clean -a -y
 
 # Setup working environement
 ARG NUPLAN_HOME=/nuplan_devkit
 WORKDIR $NUPLAN_HOME
 
 COPY requirements.txt requirements_torch.txt requirements_submission.txt environment_submission.yml /nuplan_devkit/
-RUN conda env create -f $NUPLAN_HOME/environment_submission.yml
+# RUN conda env create -f $NUPLAN_HOME/environment_submission.yml
+
+RUN conda config --add channels https://mirrors.bfsu.edu.cn/anaconda/pkgs/main/ \
+    && conda config --add channels https://mirrors.bfsu.edu.cn/anaconda/cloud/conda-forge/ \
+    && conda clean -i \
+    && conda create -n nuplan python=3.9 \
+    && /opt/conda/envs/nuplan/bin/pip install -r requirements.txt -i https://mirrors.bfsu.edu.cn/pypi/web/simple \
+    && /opt/conda/envs/nuplan/bin/pip install -r requirements_torch.txt \
+    && /opt/conda/envs/nuplan/bin/pip install -r requirements_submission.txt
 
 RUN mkdir -p $NUPLAN_HOME/nuplan
 
@@ -41,17 +55,14 @@ SHELL ["conda", "run", "-n", "nuplan", "/bin/bash", "-c"]
 
 # You can copy your own files with the following command.
 # $NUPLAN_HOME Here represents the absolute path /nuplan_devkit inside the container
-# COPY my_fabulous_model.ckpt $NUPLAN_HOME
+COPY my_fabulous_model.ckpt $NUPLAN_HOME
 
 RUN bash -c "pip install -e ."
 
 ENV NUPLAN_MAPS_ROOT=/data/sets/nuplan/maps \
     NUPLAN_DATA_ROOT=/data/sets/nuplan \
-    NUPLAN_EXP_ROOT=/data/exp/nuplan
+    NUPLAN_EXP_ROOT=/data/exp/nuplan \
+    NUPLAN_HOME=/nuplan_devkit
 
 RUN bash -c 'mkdir -p {$NUPLAN_MAPS_ROOT,$NUPLAN_DATA_ROOT,$NUPLAN_EXP_ROOT}'
-RUN apt-get update \
-    && apt-get install -y \
-    awscli \
-    && rm -rf /var/lib/apt/lists/*
 CMD ["/nuplan_devkit/nuplan/entrypoint_submission.sh"]

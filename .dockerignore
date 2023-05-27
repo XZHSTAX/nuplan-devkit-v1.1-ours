@@ -7,3 +7,5 @@ bazel-nuplan_devkit
 bazel-out
 bazel-testlogs
 .ipynb_checkpoints
+nuplan/exp
+nuplan/dataset
