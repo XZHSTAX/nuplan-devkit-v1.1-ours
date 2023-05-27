@@ -6,7 +6,8 @@ from typing import List, Optional
 
 import tqdm
 from omegaconf import DictConfig
-
+from colorama import init,Fore,Style
+init(autoreset=True)
 LOGGING_LEVEL_MAP = {
     'error': logging.ERROR,
     'warning': logging.WARNING,
@@ -127,7 +128,7 @@ def build_logger(cfg: DictConfig) -> logging.Logger:
         handler_configs.append(LogHandlerConfig(level=cfg.logger_level, path=path))
 
     format_string = (
-        '%(asctime)s %(levelname)-2s {%(pathname)s:%(lineno)d}  %(message)s'
+        Fore.LIGHTWHITE_EX+'%(asctime)s %(levelname)-2s {%(pathname)s:%(lineno)d}' +Fore.CYAN+Style.BRIGHT+ '%(message)s'
         if not cfg.logger_format_string
         else cfg.logger_format_string
     )

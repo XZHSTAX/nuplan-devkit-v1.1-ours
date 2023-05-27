@@ -208,6 +208,8 @@ class DataModule(pl.LightningDataModule):
         :raises RuntimeError: If this method is called without calling "setup()" first.
         :return: The instantiated torch dataloader.
         """
+        # self._all_samples = 0
+        # gc.collect()
         if self._train_set is None:
             raise DataModuleNotSetupError
 

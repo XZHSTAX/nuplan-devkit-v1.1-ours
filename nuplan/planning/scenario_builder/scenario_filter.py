@@ -8,11 +8,11 @@ class ScenarioFilter:
     Collection of filters used to construct scenarios from a database for training/simulation.
     """
 
-    scenario_types: Optional[List[str]]  # List of scenario types to include
-    scenario_tokens: Optional[List[Sequence[str]]]  # List of scenarios to include in the form of (log_name, token)
+    scenario_types: Optional[List[str]]  # List of scenario types to include # 可以在加载数据集前就过滤
+    scenario_tokens: Optional[List[Sequence[str]]]  # List of scenarios to include in the form of (log_name, token)# 可以在加载数据集前就过滤
 
     log_names: Optional[List[str]]  # Filter scenarios by log names
-    map_names: Optional[List[str]]  # Filter scenarios by map names
+    map_names: Optional[List[str]]  # Filter scenarios by map names # 可以在加载数据集前就过滤
 
     num_scenarios_per_type: Optional[int]  # Number of scenarios per type
     limit_total_scenarios: Optional[Union[int, float]]  # Limit total scenarios (float = fraction, int = num)

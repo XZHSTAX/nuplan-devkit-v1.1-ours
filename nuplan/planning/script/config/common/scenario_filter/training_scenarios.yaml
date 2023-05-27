@@ -1,11 +1,11 @@
 _target_: nuplan.planning.scenario_builder.scenario_filter.ScenarioFilter
 _convert_: 'all'
 
-scenario_types: null                # List of scenario types to include
-scenario_tokens: null               # List of scenario tokens to include
+scenario_types: null                # List of scenario types to include # 可以在加载数据集前就过滤 输入的值将会被选取
+scenario_tokens: null               # List of scenario tokens to include # 可以在加载数据集前就过滤
 
 log_names: null                     # Filter scenarios by log names
-map_names: null                     # Filter scenarios by map names
+map_names: null                     # Filter scenarios by map names  # 可以在加载数据集前就过滤
 
 num_scenarios_per_type: null        # Number of scenarios per type
 limit_total_scenarios: null         # Limit total scenarios (float = fraction, int = num) - this filter can be applied on top of num_scenarios_per_type
